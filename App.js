@@ -70,14 +70,14 @@ export default class App extends React.Component {
             <View style={{marginRight:15}}>
               
               <ProgressCircle
-              percent={20} // 여기 퍼센트(int)랑 아래에 text 부분(string) 같이 바뀌어야함
+              percent={50} // 여기 퍼센트(int)랑 아래에 text 부분(string) 같이 바뀌어야함
               radius={40}
               borderWidth={5}
               color="#3399FF"
               shadowColor="#999"
               bgColor="#fff"
               >
-                <Text style={{ fontSize: 21 }}>{'20%'}</Text>
+                <Text style={{ fontSize: 21 }}>{'50%'}</Text>
               </ProgressCircle>
               
             </View>
