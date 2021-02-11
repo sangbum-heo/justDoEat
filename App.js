@@ -4,14 +4,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, ImageBackground, Scrol
 import ProgressCircle from 'react-native-progress-circle';
 import KcalGoal from './KcalGoal';
 
-const quickButtons = [
-  {food:'', kcal:0},
-  {food:'', kcal:0},
-  {food:'', kcal:0},
-  {food:'', kcal:0},
-  {food:'', kcal:0},
-  {food:'', kcal:0}
-];
+
 
 
 export default class App extends React.Component {
@@ -24,7 +17,15 @@ export default class App extends React.Component {
       kcalNow: 0,
       count:0,
       goalModal: false,
-      }
+      quickButtonDatas: [
+        ['햇반',300],
+        ['닭가슴살',140],
+        ['김치찌개',300],
+        ['food',0],
+        ['food',0],
+        ['food',0]
+      ],
+    }
   };
 
   addCount(){
@@ -38,9 +39,14 @@ export default class App extends React.Component {
   }
 
   goalHandler(goal){
-    this.setState({
-      kcalGoal: goal,
-    });
+
+    // 확인 버튼을 누르지 않고 나갈 경우 goal에 object type이 들어가 에러 발생하기 때문에 예외처리
+    if(typeof goal != 'object'){
+      this.setState({
+        kcalGoal : goal,
+      });
+    }
+
     this.toggleGoalModal();
   }
   
@@ -92,26 +98,44 @@ export default class App extends React.Component {
 
           <View style={styles.middleThird}>
             <TouchableOpacity style={styles.middleThirdBox}>
-              <Text style={styles.middleSecondText}>햇반 300kcal</Text>
+              <Text style={styles.middleSecondText}>
+                {this.state.quickButtonDatas[0][0]}{" "}
+                {this.state.quickButtonDatas[0][1]}kcal
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.middleThirdBox}>
-              <Text style={styles.middleSecondText}>닭찌찌 140kcal</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.middleThird}>
-            <TouchableOpacity style={styles.middleThirdBox}>
-              <Text style={styles.middleSecondText}>김치찌개 300kcal</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.middleThirdBox}>
-              <Text style={styles.middleSecondText}>+</Text>
+              <Text style={styles.middleSecondText}>
+                {this.state.quickButtonDatas[1][0]}{" "}
+                {this.state.quickButtonDatas[1][1]}kcal
+              </Text>
             </TouchableOpacity>
           </View>
           <View style={styles.middleThird}>
             <TouchableOpacity style={styles.middleThirdBox}>
-              <Text style={styles.middleSecondText}>+</Text>
+              <Text style={styles.middleSecondText}>
+                {this.state.quickButtonDatas[2][0]}{" "}
+                {this.state.quickButtonDatas[2][1]}kcal
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.middleThirdBox}>
-              <Text style={styles.middleSecondText}>+</Text>
+              <Text style={styles.middleSecondText}>
+                {this.state.quickButtonDatas[3][0]}{" "}
+                {this.state.quickButtonDatas[3][1]}kcal
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.middleThird}>
+            <TouchableOpacity style={styles.middleThirdBox}>
+              <Text style={styles.middleSecondText}>
+                {this.state.quickButtonDatas[4][0]}{" "}
+                {this.state.quickButtonDatas[4][1]}kcal
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.middleThirdBox}>
+              <Text style={styles.middleSecondText}>
+                {this.state.quickButtonDatas[5][0]}{" "}
+                {this.state.quickButtonDatas[5][1]}kcal
+              </Text>
             </TouchableOpacity>
           </View>
           <Button title={this.state.count.toString()} onPress={this.addCount.bind(this)}></Button>
