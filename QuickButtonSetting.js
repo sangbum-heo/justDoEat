@@ -1,13 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, ImageBackground, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
 
-//middle Third 세팅창
+//middle Third (QuickButtonDatas) 변경 modal
 
 export default class App extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            buttonNumber: 0,
+            buttonNumber: this.props.num+1,
+            food: '',
+            kcal: 0,
         }
     }
     render(){
@@ -16,26 +18,28 @@ export default class App extends React.Component {
                 <TouchableOpacity 
                     style={styles.background}
                     activeOpacity={0}
-                    onPress={this.props.goalHandler}/>
-                <View style={styles.modal}>
-                    <Text style={styles.titleText}>
-                        - {this.state.buttonNumber}번째 퀵버튼 설정 -
-                    </Text>
-                    <TextInput
-                    style={styles.goalInput}
-                    value={this.state.goal}
-                    onChangeText={(changedText)=>{this.setState({goal: changedText})}}
-                    placeholder={"칼로리를 입력해주세요.(숫자만 입력)"}/>
-                    <TouchableOpacity onPress={()=>this.props.goalHandler(this.state.goal)}>
-                        <Text style={styles.doneText}>
-                            완료
-                            
+                    onPress={this.props.modalHandler}>
+                    <View style={styles.modal}>
+                        <Text style={styles.titleText}>
+                            - 퀵버튼 {this.state.buttonNumber} 설정 -
                         </Text>
+                        <TextInput
+                        style={styles.goalInput}
+                        onChangeText={(changedText)=>{this.setState({food: changedText})}}
+                        placeholder={"음식명을 입력해주세요."}/>
                         
-                    </TouchableOpacity>
-
-
-                </View>
+                        <TextInput
+                        style={styles.goalInput}
+                        keyboardType = 'numeric'
+                        onChangeText={(changedText)=>{this.setState({kcal: changedText})}}
+                        placeholder={"칼로리를 입력해주세요.(숫자만 입력)"}/>
+                        <TouchableOpacity onPress={()=>this.props.setButtonHandler(this.state.food,this.state.kcal)}>
+                            <Text style={styles.doneText}>
+                                완료
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </TouchableOpacity>
             </View>
         )
     }

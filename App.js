@@ -13,31 +13,31 @@ export default class App extends React.Component {
     this.state = {
       date: new Date(),
       kcalGoal: 1500,
-      kcalLog: [['햇반',300],['닭가슴살',140]],
+      kcalLog: [
+        {food: '햇반',kcal: 300},
+        {food: '닭가슴살',kcal: 140}
+      ],
       count:0,
       goalModal: false,
       quickSetModal: false,
+      buttonNumber: 0,
       quickButtonDatas: [
-        ['햇반',300],
-        ['닭가슴살',140],
-        ['김치찌개',300],
-        ['food',0],
-        ['food',0],
-        ['food',0]
-        // {food: '햇반', kcal: 300},
-        // {food: '닭가슴살', kcal: 140},
-        // {food: '김치찌개', kcal: 300},
-        // {food: '', kcal: 0},
-        // {food: '', kcal: 0},
-        // {food: '', kcal: 0}
+        {food: '햇반', kcal: 300, id: 0},
+        {food: '닭가슴살', kcal: 140, id: 1},
+        {food: '김치찌개', kcal: 300, id: 2},
+        {food: '', kcal: 0, id: 3},
+        {food: '', kcal: 0, id: 4},
+        {food: '', kcal: 0, id: 5}
       ],
     }
   };
 
   addLog(k){
-    this.setState({
-      kcalLog: [...this.state.kcalLog,this.state.quickButtonDatas[k]]
-    })
+    if(this.state.quickButtonDatas[k].food != '' && this.state.quickButtonDatas[k].kcal != 0){
+      this.setState({
+        kcalLog: [...this.state.kcalLog,{food: this.state.quickButtonDatas[k].food, kcal: this.state.quickButtonDatas[k].kcal}]
+      })
+    }
   }
 
   todayPercentage(){
@@ -47,7 +47,7 @@ export default class App extends React.Component {
   todayScroll(){
     let text='';
     for(var i=0; i<this.state.kcalLog.length; i++){
-      text += (this.state.kcalLog[i][0] + ' ' + this.state.kcalLog[i][1] + 'kcal\n');
+      text += (this.state.kcalLog[i].food + ' ' + this.state.kcalLog[i].kcal + 'kcal\n');
     }
     return text;
   }
@@ -55,17 +55,18 @@ export default class App extends React.Component {
   todayCalc(){
     let sum=0;
     for(var i=0; i<this.state.kcalLog.length; i++){
-      sum += this.state.kcalLog[i][1];
+      sum += this.state.kcalLog[i].kcal;
     }
     return sum;
   }
-  
-  addCount(){
-    this.setState({
-      count:this.state.count+1,
-      kcalLog: [],
-    });
-    alert(this.state.quickButtonDatas);
+
+  middleThirdText(k){
+    if(this.state.quickButtonDatas[k].food == '' && this.state.quickButtonDatas[k].kcal == 0){
+      return '+';
+    }
+    else{
+      return this.state.quickButtonDatas[k].food + ' ' + this.state.quickButtonDatas[k].kcal + 'kcal';
+    }
   }
 
   toggleGoalModal(){
@@ -74,33 +75,47 @@ export default class App extends React.Component {
     })
   }
 
-  toggleQuickSetModal(){
+  toggleQuickSetModal(k){
     this.setState({
-      quickSetModal: !this.state.quickSetModal
+      quickSetModal: !this.state.quickSetModal,
+      buttonNumber: k,
     })
   }
 
   goalHandler(goal){
-    // 확인 버튼을 누르지 않고 나갈 경우 goal에 object type이 들어가 에러 발생하기 때문에 예외처리
+    // 확인 버튼을 누르지 않고 나갈 경우 goal에 object type이 들어가서 에러가 발생하기 때문에 if문으로 예외처리
     if(typeof goal != 'object'){
       this.setState({
-        kcalGoal : goal,
-      });
+        kcalGoal : goal
+      })
     }
     this.toggleGoalModal();
   }
 
-  quickSetHandler(food, kcal){
-    if(typeof food != 'object' && typeof kcal != 'object'){
-
-      // const modifiedArray = array.map(item => item.id === 1
-      //   ? ({ ...item, text: 'Korea' }) // id 가 일치하면 새 객체를 만들고, 기존의 내용을 집어넣고 원하는 값 덮어쓰기
-      //   : item,
-      this.setState({
-        quickButtonDatas: 'aa',
-      })
-    }
+  quickSetHandler(foody, kcaly){
+      if(foody != '' && kcaly != ''){
+        // id 가 일치하면 새 객체를 만들고, 기존의 내용을 집어넣고 원하는 값 덮어쓰기
+        const modifiedArray = this.state.quickButtonDatas.map(item => item.id === this.state.buttonNumber
+          ? ({ ...item, food: foody, kcal: parseInt(kcaly)})
+          : item)
+        
+        this.setState({
+          quickButtonDatas: modifiedArray,
+        })
+      }
+    
+    this.toggleQuickSetModal();
   }
+
+  // addCount(){
+  //   const modifiedArray = this.state.quickButtonDatas.map(item => item.id === 5
+  //     ? ({ ...item, food: '고구마', kcal: 200}) // id 가 일치하면 새 객체를 만들고, 기존의 내용을 집어넣고 원하는 값 덮어쓰기
+  //     : item)
+  //   this.setState({
+  //     count:this.state.count+1,
+  //     quickButtonDatas: modifiedArray,
+  //   });
+  // }
   
   render(){
     return (
@@ -152,51 +167,65 @@ export default class App extends React.Component {
 
           <View style={styles.middleThird}>
             <TouchableOpacity 
-              style={styles.middleThirdBox}
-              onPress={()=>this.addLog(0)}
-              onLongPress={()=>this.toggleQuickSetModal()}
-              >
+            style={styles.middleThirdBox}
+            onPress={()=>this.addLog(0)}
+            onLongPress={()=>this.toggleQuickSetModal(0)}
+            >
               <Text style={styles.middleSecondText}>
-                {this.state.quickButtonDatas[0][0]}{" "}
-                {this.state.quickButtonDatas[0][1]}kcal
+                {this.middleThirdText(0)}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.middleThirdBox} onPress={()=>this.addLog(1)}>
-              <Text style={styles.middleSecondText}>
-                {this.state.quickButtonDatas[1][0]}{" "}
-                {this.state.quickButtonDatas[1][1]}kcal
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.middleThird}>
-            <TouchableOpacity style={styles.middleThirdBox} onPress={()=>this.addLog(2)}>
-              <Text style={styles.middleSecondText}>
-                {this.state.quickButtonDatas[2][0]}{" "}
-                {this.state.quickButtonDatas[2][1]}kcal
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.middleThirdBox} onPress={()=>this.addLog(3)}>
-              <Text style={styles.middleSecondText}>
-                {this.state.quickButtonDatas[3][0]}{" "}
-                {this.state.quickButtonDatas[3][1]}kcal
+            <TouchableOpacity
+            style={styles.middleThirdBox}
+            onPress={()=>this.addLog(1)}
+            onLongPress={()=>this.toggleQuickSetModal(1)}
+            >
+            <Text style={styles.middleSecondText}>
+                {this.middleThirdText(1)}
               </Text>
             </TouchableOpacity>
           </View>
           <View style={styles.middleThird}>
-            <TouchableOpacity style={styles.middleThirdBox} onPress={()=>this.addLog(4)}>
+            <TouchableOpacity
+            style={styles.middleThirdBox}
+            onPress={()=>this.addLog(2)}
+            onLongPress={()=>this.toggleQuickSetModal(2)}
+            >
               <Text style={styles.middleSecondText}>
-                {this.state.quickButtonDatas[4][0]}{" "}
-                {this.state.quickButtonDatas[4][1]}kcal
+                {this.middleThirdText(2)}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.middleThirdBox} onPress={()=>this.addLog(5)}>
+            <TouchableOpacity
+            style={styles.middleThirdBox}
+            onPress={()=>this.addLog(3)}
+            onLongPress={()=>this.toggleQuickSetModal(3)}
+            >
               <Text style={styles.middleSecondText}>
-                {this.state.quickButtonDatas[5][0]}{" "}
-                {this.state.quickButtonDatas[5][1]}kcal
+                {this.middleThirdText(3)}
               </Text>
             </TouchableOpacity>
           </View>
-          <Button title={this.state.count.toString()} onPress={this.addCount.bind(this)}></Button>
+          <View style={styles.middleThird}>
+            <TouchableOpacity
+            style={styles.middleThirdBox}
+            onPress={()=>this.addLog(4)}
+            onLongPress={()=>this.toggleQuickSetModal(4)}
+            >
+              <Text style={styles.middleSecondText}>
+                {this.middleThirdText(4)}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+            style={styles.middleThirdBox}
+            onPress={()=>this.addLog(5)}
+            onLongPress={()=>this.toggleQuickSetModal(5)}
+            >
+              <Text style={styles.middleSecondText}>
+                {this.middleThirdText(5)}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {/* <Button title={this.state.count.toString()} onPress={this.addCount.bind(this)}></Button> */}
         </View>
 
         <View style={styles.bottomView}>
@@ -213,12 +242,17 @@ export default class App extends React.Component {
         <StatusBar style='auto' />
         </ImageBackground>
         
-        { this.state.goalModal ?<KcalGoal
-          goalHandler={()=>this.toggleGoalModal()}
-          goalHandler={(goal)=>this.goalHandler(goal)}/>
+        {this.state.goalModal ? <KcalGoal
+          modalHandler={()=>this.toggleGoalModal()}
+          setGoalHandler={(kcalGoal)=>this.goalHandler(kcalGoal)}/>
         : <></> }
 
-        {this.state.quickSetModal ? <QuickSet/> : <></>}
+        {this.state.quickSetModal ? <QuickSet
+          modalHandler={(bNum)=>this.toggleQuickSetModal(bNum)}
+          setButtonHandler={(foody,kcaly)=>this.quickSetHandler(foody,kcaly)}
+          num={this.state.buttonNumber}/>
+        : <></>}
+
       </View>
     );
   }
@@ -285,7 +319,7 @@ const styles = StyleSheet.create({
     
     fontSize: 30,
     fontWeight: 'bold',
-    color: '#4abef0',
+    color: '#33AFFF',
     
 
     textShadowColor:'#585858',

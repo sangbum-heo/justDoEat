@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, ImageBackground, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
 
 // middleFirst의 MAX : ~ kcal 설정 파트
 
@@ -16,26 +16,28 @@ export default class App extends React.Component {
                 <TouchableOpacity 
                     style={styles.background}
                     activeOpacity={0}
-                    onPress={this.props.goalHandler}/>
+                    onPress={this.props.modalHandler}>
                 <View style={styles.modal}>
                     <Text style={styles.titleText}>
                         - 일일 목표 칼로리 설정 -
                     </Text>
                     <TextInput
                     style={styles.goalInput}
-                    value={this.state.goal}
+                    //value={this.state.goal}
                     onChangeText={(changedText)=>{this.setState({goal: changedText})}}
                     placeholder={"칼로리를 입력해주세요.(숫자만 입력)"}/>
-                    <TouchableOpacity onPress={()=>this.props.goalHandler(this.state.goal)}>
+                    <TouchableOpacity onPress={()=>this.props.setGoalHandler(this.state.goal)}>
                         <Text style={styles.doneText}>
                             완료
                             
                         </Text>
                         
                     </TouchableOpacity>
+                    
 
 
                 </View>
+                </TouchableOpacity>
             </View>
         );
     }
