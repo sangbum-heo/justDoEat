@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, ImageBackground, Scrol
 import ProgressCircle from 'react-native-progress-circle';
 import KcalGoal from './KcalGoal';
 import QuickSet from './QuickButtonSetting';
+import Setting from './Setting';
 
 
 export default class App extends React.Component {
@@ -20,6 +21,7 @@ export default class App extends React.Component {
       count:0,
       goalModal: false,
       quickSetModal: false,
+      settingPage: false,
       buttonNumber: 0,
       quickButtonDatas: [
         {food: '햇반', kcal: 300, id: 0},
@@ -33,7 +35,10 @@ export default class App extends React.Component {
   };
 
   addLog(k){
-    if(this.state.quickButtonDatas[k].food != '' && this.state.quickButtonDatas[k].kcal != 0){
+    if(this.state.quickButtonDatas[k].food == '' && this.state.quickButtonDatas[k].kcal == 0){
+      this.toggleQuickSetModal(k);
+    }
+    else{
       this.setState({
         kcalLog: [...this.state.kcalLog,{food: this.state.quickButtonDatas[k].food, kcal: this.state.quickButtonDatas[k].kcal}]
       })
@@ -82,6 +87,12 @@ export default class App extends React.Component {
     })
   }
 
+  toggleSettingPage(){
+    this.setState({
+      settingPage: !this.state.settingPage,
+    })
+  }
+
   goalHandler(goal){
     // 확인 버튼을 누르지 않고 나갈 경우 goal에 object type이 들어가서 에러가 발생하기 때문에 if문으로 예외처리
     if(typeof goal != 'object'){
@@ -107,6 +118,17 @@ export default class App extends React.Component {
     this.toggleQuickSetModal();
   }
 
+  quickSetDelete(k){
+    const modifiedArray = this.state.quickButtonDatas.map(item => item.id == k
+      ? ({...item, food: '', kcal: 0})
+      : item)
+
+    this.setState({
+      quickButtonDatas: modifiedArray,
+    })
+    this.toggleQuickSetModal();
+  }
+
   // addCount(){
   //   const modifiedArray = this.state.quickButtonDatas.map(item => item.id === 5
   //     ? ({ ...item, food: '고구마', kcal: 200}) // id 가 일치하면 새 객체를 만들고, 기존의 내용을 집어넣고 원하는 값 덮어쓰기
@@ -125,9 +147,9 @@ export default class App extends React.Component {
           source={require('./images/background.png')}>
 
         <View style={styles.topView}>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <Image source={require('./images/menuIcon4.png')}/>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Text style={styles.topTitle}>Just Do Eat!</Text>
         </View>
 
@@ -232,11 +254,11 @@ export default class App extends React.Component {
           <TouchableOpacity style={styles.bottom1}>
             <Image source={require('./images/home2.png')}/>
           </TouchableOpacity>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <Image source={require('./images/home2.png')}/>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.bottom3}>
-            <Image source={require('./images/home2.png')}/>
+          </TouchableOpacity> */}
+          <TouchableOpacity style={styles.bottom3} onPress={()=>this.toggleSettingPage()}>
+            <Image source={require('./images/setting2.png')}/>
           </TouchableOpacity>
         </View>
         <StatusBar style='auto' />
@@ -250,8 +272,11 @@ export default class App extends React.Component {
         {this.state.quickSetModal ? <QuickSet
           modalHandler={(bNum)=>this.toggleQuickSetModal(bNum)}
           setButtonHandler={(foody,kcaly)=>this.quickSetHandler(foody,kcaly)}
+          deleteButtonHandler={(k)=>this.quickSetDelete(k)}
           num={this.state.buttonNumber}/>
         : <></>}
+
+        {this.state.settingPage ? <Setting modalHandler={()=>this.toggleSettingPage()}/> : <></>}
 
       </View>
     );
@@ -268,14 +293,12 @@ const styles = StyleSheet.create({
   //top
   topView: {
     flex: 2.3,
-    
     justifyContent: 'flex-end',
-    marginLeft: 3,
-    flexWrap: 'wrap',
+    // marginLeft: 3,
+    // flexWrap: 'wrap',
   },
   topTitle: {
-    marginLeft: 70,
-    alignContent: 'center',
+    alignSelf: 'center',
     fontSize: 30,
     fontWeight: 'bold',
   },

@@ -33,11 +33,18 @@ export default class App extends React.Component {
                         keyboardType = 'numeric'
                         onChangeText={(changedText)=>{this.setState({kcal: changedText})}}
                         placeholder={"칼로리를 입력해주세요.(숫자만 입력)"}/>
-                        <TouchableOpacity onPress={()=>this.props.setButtonHandler(this.state.food,this.state.kcal)}>
-                            <Text style={styles.doneText}>
-                                완료
-                            </Text>
-                        </TouchableOpacity>
+                        <View style={styles.selectTouchable}>
+                            <TouchableOpacity onPress={()=>this.props.setButtonHandler(this.state.food,this.state.kcal)}>
+                                <Text style={styles.doneText}>
+                                    완료
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={()=>this.props.deleteButtonHandler(this.state.buttonNumber-1)}>
+                                <Text style={styles.resetText}>
+                                    초기화
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -77,9 +84,19 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#a5a5a5'
     },
+    selectTouchable: {
+        flexDirection: 'row',
+    },
     doneText: {
         color: 'rgb(1,123,255)',
         fontSize: 15,
-        margin: 10
+        margin: 10,
+        marginHorizontal: 25,
+    },
+    resetText: {
+        color: 'rgb(1,123,255)',
+        fontSize: 15,
+        margin: 10,
+        marginHorizontal: 25,
     },
 });
