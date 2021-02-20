@@ -1,10 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, ImageBackground, ScrollView, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, ImageBackground, ScrollView, Button, useState } from 'react-native';
 import ProgressCircle from 'react-native-progress-circle';
 import KcalGoal from './KcalGoal';
 import QuickSet from './QuickButtonSetting';
 import Setting from './Setting';
+import LogUpdate from './LogUpdate';
 
 
 export default class App extends React.Component {
@@ -16,11 +17,13 @@ export default class App extends React.Component {
       kcalGoal: 1500,
       kcalLog: [
         {food: '햇반',kcal: 300},
+        {food: '김치찌개',kcal: 300},
         {food: '닭가슴살',kcal: 140}
       ],
       count:0,
       goalModal: false,
       quickSetModal: false,
+      logModal: false,
       settingPage: false,
       buttonNumber: 0,
       quickButtonDatas: [
@@ -33,6 +36,36 @@ export default class App extends React.Component {
       ],
     }
   };
+
+  deleteItemTest(k){
+    const ppap = this.state.kcalLog;
+    ppap.splice(k, 1, );
+    this.setState({
+      kcalLog: ppap,
+    })
+  }
+
+  appendItemTest(){
+    const ppap = this.state.kcalLog;
+    ppap.splice(this.state.kcalLog.length, 1, {food: '국수',kcal: 200});
+    this.setState({
+      kcalLog: ppap,
+    })
+  }
+
+  test(){ // 이러면 삭제하고나서 가장 위에 있는 항목의 id를 다시 0으로 설정해야하는데 어떡하지..
+    const modi = this.state.kcalLog.filter(id => id.id !== 0);
+    this.setState({
+      kcalLog: modi,
+    })
+  }
+  
+  setLog(arr){ //LogUpdate에 props로 보낼 함수
+    this.setState({
+      kcalLog: arr,
+    })
+    this.toggleLogModal();
+  }
 
   addLog(k){
     if(this.state.quickButtonDatas[k].food == '' && this.state.quickButtonDatas[k].kcal == 0){
@@ -90,6 +123,12 @@ export default class App extends React.Component {
   toggleSettingPage(){
     this.setState({
       settingPage: !this.state.settingPage,
+    })
+  }
+
+  toggleLogModal(){
+    this.setState({
+      logModal: !this.state.logModal,
     })
   }
 
@@ -178,7 +217,7 @@ export default class App extends React.Component {
             </View>
           </View>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>this.toggleLogModal()}>
             <View style={styles.middleSecond}>
               <Text style={styles.middleSecondTitle}>섭취 기록</Text>
               <ScrollView>
@@ -251,7 +290,7 @@ export default class App extends React.Component {
         </View>
 
         <View style={styles.bottomView}>
-          <TouchableOpacity style={styles.bottom1}>
+          <TouchableOpacity style={styles.bottom1} onPress={()=>this.appendItemTest()}>
             <Image source={require('./images/home2.png')}/>
           </TouchableOpacity>
           {/* <TouchableOpacity>
@@ -260,6 +299,11 @@ export default class App extends React.Component {
           <TouchableOpacity style={styles.bottom3} onPress={()=>this.toggleSettingPage()}>
             <Image source={require('./images/setting2.png')}/>
           </TouchableOpacity>
+
+          <TouchableOpacity>
+            <Text>TEST</Text>
+          </TouchableOpacity>
+
         </View>
         <StatusBar style='auto' />
         </ImageBackground>
@@ -277,6 +321,12 @@ export default class App extends React.Component {
         : <></>}
 
         {this.state.settingPage ? <Setting modalHandler={()=>this.toggleSettingPage()}/> : <></>}
+
+        {this.state.logModal ? <LogUpdate
+          modalHandler={()=>this.toggleLogModal()}
+          appKcalLog={this.state.kcalLog}
+          setAppKcalLog={(arr)=>this.setLog(arr)}/>
+        : <></>}
 
       </View>
     );
@@ -312,7 +362,7 @@ const styles = StyleSheet.create({
   middleFirst: {
     height: 70,
     width: 275,
-    marginTop: 8,
+    marginTop: 5,
     marginLeft: 15,
     borderColor: '#555',
     borderRadius: 18,

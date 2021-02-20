@@ -23,6 +23,7 @@ export default class App extends React.Component {
                     </Text>
                     <TextInput
                     style={styles.goalInput}
+                    keyboardType = 'numeric'
                     //value={this.state.goal}
                     onChangeText={(changedText)=>{this.setState({goal: changedText})}}
                     placeholder={"칼로리를 입력해주세요.(숫자만 입력)"}/>

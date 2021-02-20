@@ -1,18 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, ImageBackground, Image, StatusBar } from 'react-native';
-import MainPage from './App';
 export default class App extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            mainPage: false,
+            // mainPage: false,
         }
-    }
-
-    toggleMainPage(){
-        this.setState({
-            // mainPage: !this.state.mainPage,
-        })
     }
 
     render(){
@@ -31,8 +24,12 @@ export default class App extends React.Component {
 
                         </View>
                         <View style={styles.mid2}>
-
+                            
                         </View>
+                    </View>
+                    <View style={{alignItems: 'flex-end', margin: 10}}>
+                        <Text>만든이 : 허상범</Text>
+                        <Text>heosangbum00@naver.com</Text>
                     </View>
                     <View style={styles.bottomView}>
                         <TouchableOpacity style={styles.bottom1} onPress={()=>this.props.modalHandler()}>
@@ -88,7 +85,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         alignSelf: 'center',
         marginTop: 50,
-        marginBottom:10,
+        marginBottom:12.5,
         // justifyContent: 'center',
         // alignContent: 'center',
         shadowColor: "#000",
@@ -109,8 +106,8 @@ const styles = StyleSheet.create({
         borderWidth: 1.5,
         backgroundColor: 'white',
         alignSelf: 'center',
-        marginBottom: 50,
-        marginTop: 10,
+        marginBottom: 30,
+        marginTop: 12.5,
         // justifyContent: 'center',
         // alignContent: 'center',
         shadowColor: "#000",
@@ -126,7 +123,7 @@ const styles = StyleSheet.create({
 
     //bottom
     bottomView: {
-        flex: 1.8,
+        flex: 1.98,
         backgroundColor: 'rgba(255,255,255,0.88)',
         flexDirection: 'row',
         alignItems: 'center',
