@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import LogAppend from './LogAppend';
+import LogDelete from './LogDelete';
 
 export default class App extends React.Component {
     
@@ -10,7 +11,9 @@ export default class App extends React.Component {
         this.state = {
             food1: '',
             kcal1: 0,
+            delNum: -1,
             logAppendModal: false,
+            logDeleteModal: false,
             tempKcalLog: this.props.appKcalLog.slice(), // tempKcalLog와 this.props.appKcalLog가 가리키고 있는 것이 똑같다?
                                 // 그렇다면 새로운 곳에 내용을 복사하고 그 곳을 가리키게 ㄱ?
         }
@@ -19,6 +22,10 @@ export default class App extends React.Component {
     // 확인을 누르면 App.js 배열에 넣고
     // 취소를 누르면 App.js 배열에 넣지 않고 modal 창을 닫는다.
     
+    test(){
+        alert(this.state.delNum);
+    }
+
     tempScroll(){
         var text=[];
         var scrollLines=[]; 
@@ -27,17 +34,17 @@ export default class App extends React.Component {
         }
         for(var i=0; i<text.length; i++){
             scrollLines[i] =
-                <TouchableOpacity>
+                <TouchableOpacity
+                onPress={()=>this.openDeleteModal(i)}
+                >
                     <Text style={styles.scrollText}>
-                        {text[i].line}
+                        {text[i].line}   i : {i}
                     </Text>
                 </TouchableOpacity>;
                 
         }
         
-        return (
-        scrollLines
-        );
+        return scrollLines;
     }
 
     appendItem(foody,kcaly){
@@ -46,13 +53,30 @@ export default class App extends React.Component {
         this.setState({
             tempKcalLog: modiArr,
         })
-        this.toggleLogAppend();
-        
+        this.toggleLogAppend();   
+    }
+    deleteItem(k){
+        var modiArr = this.state.tempKcalLog.slice();
     }
 
     toggleLogAppend(){
         this.setState({
             logAppendModal: !this.state.logAppendModal,
+        })
+    }
+
+    openDeleteModal(k){
+        
+        this.setState({
+            delNum: k,
+        })
+        
+        this.toggleLogDelete();
+    }
+
+    toggleLogDelete(){
+        this.setState({
+            logDeleteModal: !this.state.logDeleteModal,
         })
     }
 
@@ -87,7 +111,10 @@ export default class App extends React.Component {
                             </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={()=>this.props.modalHandler()}>
+                        <TouchableOpacity 
+                        // onPress={()=>this.props.modalHandler()}
+                        onPress={()=>this.test()}
+                        >
                             <Text style={styles.doneText}>
                                 취소
                             </Text>
@@ -97,9 +124,21 @@ export default class App extends React.Component {
 
                     </View>
                 </TouchableOpacity>
+
                 {this.state.logAppendModal ? <LogAppend
                     modalHandler={()=>this.toggleLogAppend()}
-                    appendTempItem={(food1,kcal1)=>this.appendItem(food1,kcal1)}/> : <></>}
+                    appendTempItem={(food1,kcal1)=>this.appendItem(food1,kcal1)}/>
+                    : <></>}
+
+                {this.state.logDeleteModal ? <LogDelete
+                    modalHandler={()=>this.toggleLogDelete()}
+                    deleteTempItem={(k)=>this.deleteItem(k)}
+                    num={this.state.delNum}
+                    element={this.state.tempKcalLog[this.state.delNum]}
+                    />
+                    
+                    : <></>}
+
             </View>
         )
     }
@@ -132,7 +171,8 @@ const styles = StyleSheet.create({
         
     },
     scrollText: {
-        fontSize: 17
+        fontSize: 18,
+        margin: 1,
     },
     selectTouchable: {
         flexDirection: 'row',
