@@ -325,7 +325,8 @@ export default class App extends React.Component {
         {this.state.logModal ? <LogUpdate
           modalHandler={()=>this.toggleLogModal()}
           appKcalLog={this.state.kcalLog}
-          setAppKcalLog={(arr)=>this.setLog(arr)}/>
+          setAppKcalLog={(arr)=>this.setLog(arr)}
+          />
         : <></>}
 
       </View>
