@@ -5,14 +5,16 @@ export default class App extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            deleteNumber: this.props.num,
             food: '',
             kcal: 0,
+            tempKcalLog: this.props.tempKcalLog,
         }
     }
-    // 임시 배열을 하나 만들어서 보여주고
-    // 확인을 누르면 App.js 배열에 넣고
-    // 취소를 누르면 App.js 배열에 넣지 않고 modal 창을 닫는다.
+    logElementDelete(k){
+        var temp = this.state.tempKcalLog;
+        temp.splice(k,k+1);
+        this.props.modalHandler();
+    }
     render(){
         return(
             <View style={styles.container}>
@@ -24,13 +26,14 @@ export default class App extends React.Component {
                         - 섭취 기록 삭제-
                     </Text>
                     <Text>
-                        정말로 {this.props.element}를 삭제하시겠습니까? num: {this.props.num}
+                        {this.props.tempKcalLog[this.props.num].food} {this.props.tempKcalLog[this.props.num].kcal}kcal
+                        를 삭제하시겠습니까?
                     </Text>
                     
                     <View style={styles.selectTouchable}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=>this.logElementDelete(this.props.num)}>
                             <Text style={styles.doneText}>
-                                완료
+                                삭제
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={()=>this.props.modalHandler()}>

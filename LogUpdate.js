@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView } from 
 import LogAppend from './LogAppend';
 import LogDelete from './LogDelete';
 
+
 export default class App extends React.Component {
     
     constructor(props){
@@ -10,42 +11,45 @@ export default class App extends React.Component {
         super(props);
         this.state = {
             food1: '',
-            kcal1: 0,
-            delNum: -1,
+            kcal1: -1,
+            delNum: 0,
+            // scrollLines: '',
             logAppendModal: false,
             logDeleteModal: false,
             tempKcalLog: this.props.appKcalLog.slice(), // tempKcalLog와 this.props.appKcalLog가 가리키고 있는 것이 똑같다?
-                                // 그렇다면 새로운 곳에 내용을 복사하고 그 곳을 가리키게 ㄱ?
+                                // 그렇다면 새로운 곳에 내용을 복사하고 그 곳을 가리키게 ㄱ? (얕은 복사, 깊은 복사)
         }
     }
     // 임시 배열을 하나 만들어서 보여주고
     // 확인을 누르면 App.js 배열에 넣고
     // 취소를 누르면 App.js 배열에 넣지 않고 modal 창을 닫는다.
     
-    test(){
-        alert(this.state.delNum);
-    }
+    
+    
 
-    tempScroll(){
-        var text=[];
-        var scrollLines=[]; 
-        for(var i=0; i<this.state.tempKcalLog.length; i++){
-            text[i] = {line : this.state.tempKcalLog[i].food + ' ' + this.state.tempKcalLog[i].kcal + 'kcal'};
-        }
-        for(var i=0; i<text.length; i++){
-            scrollLines[i] =
-                <TouchableOpacity
-                onPress={()=>this.openDeleteModal(i)}
-                >
-                    <Text style={styles.scrollText}>
-                        {text[i].line}   i : {i}
-                    </Text>
-                </TouchableOpacity>;
+    // tempScroll(){
+    //     var text=[];
+    //     var tempLines=[]; 
+    //     for(var i=0; i<this.state.tempKcalLog.length; i++){
+    //         text[i] = {line : this.state.tempKcalLog[i].food + ' ' + this.state.tempKcalLog[i].kcal + 'kcal'};
+    //     }
+    //     for(var i=0; i<text.length; i++){
+    //         tempLines[i] = { id: i,line :
+    //             <TouchableOpacity
+    //             onPress={()=>this.openDeleteModal(id)}
+    //             >
+    //                 <Text style={styles.scrollText}>
+    //                     {text[i].line}
+    //                 </Text>
+    //             </TouchableOpacity>};
                 
-        }
-        
-        return scrollLines;
-    }
+    //     }
+    //     this.setState({
+    //         scrollLines: tempLines[0],
+    //     })
+    //     // return ;
+    //       //      scrollLines.li -> 출력 X   //     scrollLines[0] -> 출력 O 
+    // }
 
     appendItem(foody,kcaly){
         var modiArr = this.state.tempKcalLog.slice();
@@ -56,7 +60,7 @@ export default class App extends React.Component {
         this.toggleLogAppend();   
     }
     deleteItem(k){
-        var modiArr = this.state.tempKcalLog.slice();
+        var modiArr = this.state.tempKcalLog;
     }
 
     toggleLogAppend(){
@@ -68,9 +72,8 @@ export default class App extends React.Component {
     openDeleteModal(k){
         
         this.setState({
-            delNum: k,
-        })
-        
+            delNum: k,    
+        });
         this.toggleLogDelete();
     }
 
@@ -79,6 +82,48 @@ export default class App extends React.Component {
             logDeleteModal: !this.state.logDeleteModal,
         })
     }
+
+    test(){
+        // return (
+        //     this.state.tempKcalLog.map(line => (
+        //         this.test2(line)
+        //     ))
+        // );
+        var tempLines = this.state.tempKcalLog.slice()
+
+        var tempLines2 = [];
+        for(var i=0; i<tempLines.length; i++){
+            tempLines2.push({food: tempLines[i].food,kcal: tempLines[i].kcal, id: i});
+        }
+        // var tempLines2 = [
+        //     {food: tempLines[0].food,kcal: tempLines[0].kcal, id: 0}
+        // ]
+
+        
+        // this.test3(tempLines[0]);
+        
+        // for(var i=0; i<tempLines.length; i++){
+        //     tempLines.push({id: i});
+        // }
+        return(
+            tempLines2.map(line =>(
+                this.test2(line)
+            ))
+        );
+    }
+    
+    test2(arr){
+        
+        return (
+            <TouchableOpacity onPress={()=>this.openDeleteModal(arr.id)}>
+                <Text>
+                    {arr.food} {arr.kcal}kcal
+                </Text>
+            </TouchableOpacity>
+        );
+    }
+
+    
 
     render(){
         return(
@@ -92,7 +137,10 @@ export default class App extends React.Component {
                     </Text>
 
                     <ScrollView>
-                        {this.tempScroll()}
+                        {this.test()}
+                        {/* ////////////////////////////////////////////////////////// */}
+                        {/* ////////////////////////////////////////////////////////// */}
+
                     </ScrollView>
                     
                     <View style={styles.selectTouchable}>
@@ -113,7 +161,7 @@ export default class App extends React.Component {
 
                         <TouchableOpacity 
                         // onPress={()=>this.props.modalHandler()}
-                        onPress={()=>this.test()}
+                        onPress={()=>this.props.modalHandler()}
                         >
                             <Text style={styles.doneText}>
                                 취소
@@ -132,9 +180,10 @@ export default class App extends React.Component {
 
                 {this.state.logDeleteModal ? <LogDelete
                     modalHandler={()=>this.toggleLogDelete()}
-                    deleteTempItem={(k)=>this.deleteItem(k)}
+                    // deleteTempItem={(k)=>this.deleteItem(k)}
                     num={this.state.delNum}
-                    element={this.state.tempKcalLog[this.state.delNum]}
+                    tempKcalLog={this.state.tempKcalLog}
+                    // element={this.state.tempKcalLog[this.state.delNum]}
                     />
                     
                     : <></>}
@@ -143,6 +192,7 @@ export default class App extends React.Component {
         )
     }
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -184,3 +234,4 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
     },
 });
+

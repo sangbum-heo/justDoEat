@@ -37,22 +37,6 @@ export default class App extends React.Component {
     }
   };
 
-  deleteItemTest(k){
-    const ppap = this.state.kcalLog;
-    ppap.splice(k, 1, );
-    this.setState({
-      kcalLog: ppap,
-    })
-  }
-
-  appendItemTest(){
-    const ppap = this.state.kcalLog;
-    ppap.splice(this.state.kcalLog.length, 1, {food: '국수',kcal: 200});
-    this.setState({
-      kcalLog: ppap,
-    })
-  }
-
   test(){ // 이러면 삭제하고나서 가장 위에 있는 항목의 id를 다시 0으로 설정해야하는데 어떡하지..
     const modi = this.state.kcalLog.filter(id => id.id !== 0);
     this.setState({
@@ -290,7 +274,7 @@ export default class App extends React.Component {
         </View>
 
         <View style={styles.bottomView}>
-          <TouchableOpacity style={styles.bottom1} onPress={()=>this.appendItemTest()}>
+          <TouchableOpacity style={styles.bottom1}>
             <Image source={require('./images/home2.png')}/>
           </TouchableOpacity>
           {/* <TouchableOpacity>
@@ -298,10 +282,6 @@ export default class App extends React.Component {
           </TouchableOpacity> */}
           <TouchableOpacity style={styles.bottom3} onPress={()=>this.toggleSettingPage()}>
             <Image source={require('./images/setting2.png')}/>
-          </TouchableOpacity>
-
-          <TouchableOpacity>
-            <Text>TEST</Text>
           </TouchableOpacity>
 
         </View>
@@ -420,12 +400,13 @@ const styles = StyleSheet.create({
   },
   middleSecondTitle: {
     alignSelf: 'center',
-    fontSize: 25,
-    fontWeight: 'bold',
+    fontSize: 28,
+    
   },
   middleSecondText: {               // 섭취 기록 부분은 dday강의 마지막 chat 부분 참고해보자
     alignSelf: 'center',
-    fontSize: 20,
+    fontSize: 18,
+    
   },
 
   middleThird: {

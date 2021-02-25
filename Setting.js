@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
 
     //top
     topview: {
-        flex: 2.3,
+        flex: 2.52,
         justifyContent: 'flex-end',
     },
     topTitle: {
@@ -80,11 +80,11 @@ const styles = StyleSheet.create({
         
         width: '93%',
         height: '35%',
-        borderRadius: 25,
+        borderRadius: 18,
         borderWidth: 1.5,
         backgroundColor: 'white',
         alignSelf: 'center',
-        marginTop: 50,
+        marginTop: 59,
         marginBottom:12.5,
         // justifyContent: 'center',
         // alignContent: 'center',
