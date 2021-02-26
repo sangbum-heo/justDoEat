@@ -26,7 +26,7 @@ setState를 할 때 값을
 --------------
 
 Warning
-Each child in a list should have a unique "key" prop. 라는 에러가 발생하였다.
+Each child in a list should have a unique "key" prop. 라는 창이 떴다.
 
 <TouchableOpacity onPress={()=>this.openDeleteModal(arr.id)} key={arr.id}>
   <Text>
