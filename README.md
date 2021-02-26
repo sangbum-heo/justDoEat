@@ -22,3 +22,16 @@ git push justDoEat master
 setState를 할 때 값을
 ~: ~.slice(),
 이렇게 하게 되면 깊은 복사를 하게 되어 서로의 값에 영향을 주지 않는다.
+
+--------------
+
+Warning
+Each child in a list should have a unique "key" prop. 라는 에러가 발생하였다.
+
+<TouchableOpacity onPress={()=>this.openDeleteModal(arr.id)} key={arr.id}>
+  <Text>
+    {arr.food} {arr.kcal}kcal
+  </Text>
+</TouchableOpacity>
+
+TouchableOpacity 컴포넌트에 arr.id 라는 키 값을 넣어주니 Warning 이 더이상 발생하지 않았다.
