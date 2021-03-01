@@ -12,7 +12,7 @@ export default class App extends React.Component {
     }
     logElementDelete(k){
         var temp = this.state.tempKcalLog;
-        temp.splice(k,k+1);
+        temp.splice(k,1);
         this.props.modalHandler();
     }
     render(){

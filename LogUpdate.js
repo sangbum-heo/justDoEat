@@ -59,9 +59,6 @@ export default class App extends React.Component {
         })
         this.toggleLogAppend();   
     }
-    deleteItem(k){
-        var modiArr = this.state.tempKcalLog;
-    }
 
     toggleLogAppend(){
         this.setState({
@@ -83,7 +80,7 @@ export default class App extends React.Component {
         })
     }
 
-    test(){
+    textLines(){
         // return (
         //     this.state.tempKcalLog.map(line => (
         //         this.test2(line)
@@ -107,15 +104,15 @@ export default class App extends React.Component {
         // }
         return(
             tempLines2.map(line =>(
-                this.test2(line)
+                this.renderTextLine(line)
             ))
         );
     }
     
-    test2(arr){
+    renderTextLine(arr){
         
         return (
-            <TouchableOpacity onPress={()=>this.openDeleteModal(arr.id)}>
+            <TouchableOpacity onPress={()=>this.openDeleteModal(arr.id)} key={arr.id}>
                 <Text>
                     {arr.food} {arr.kcal}kcal
                 </Text>
@@ -137,10 +134,7 @@ export default class App extends React.Component {
                     </Text>
 
                     <ScrollView>
-                        {this.test()}
-                        {/* ////////////////////////////////////////////////////////// */}
-                        {/* ////////////////////////////////////////////////////////// */}
-
+                        {this.textLines()}
                     </ScrollView>
                     
                     <View style={styles.selectTouchable}>
@@ -170,7 +164,7 @@ export default class App extends React.Component {
 
                     </View>
 
-                    </View>
+                </View>
                 </TouchableOpacity>
 
                 {this.state.logAppendModal ? <LogAppend
