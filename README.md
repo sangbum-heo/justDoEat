@@ -35,3 +35,8 @@ Each child in a list should have a unique "key" prop. 라는 창이 떴다.
 </TouchableOpacity>
 
 TouchableOpacity 컴포넌트에 arr.id 라는 키 값을 넣어주니 Warning 이 더이상 발생하지 않았다.
+
+--------------
+
+각 컴포넌트들의 사이즈는 width: '30%', height: '20%' 이런식으로 퍼센테이지로 설정해준다.
+절대값(숫자)으로 넣어주면 기기마다 해상도가 달라서 원하는 모양이 안 나올 수 있다.
