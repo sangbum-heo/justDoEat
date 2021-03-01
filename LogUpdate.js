@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import LogAppend from './LogAppend';
 import LogDelete from './LogDelete';
+import LogDeleteAll from './LogDeleteAll';
 
 
 export default class App extends React.Component {
@@ -16,6 +17,7 @@ export default class App extends React.Component {
             // scrollLines: '',
             logAppendModal: false,
             logDeleteModal: false,
+            logDeleteAllModal: false,
             tempKcalLog: this.props.appKcalLog.slice(), // tempKcalLog와 this.props.appKcalLog가 가리키고 있는 것이 똑같다?
                                 // 그렇다면 새로운 곳에 내용을 복사하고 그 곳을 가리키게 ㄱ? (얕은 복사, 깊은 복사)
         }
@@ -74,9 +76,19 @@ export default class App extends React.Component {
         this.toggleLogDelete();
     }
 
+    openDeleteAllModal(){
+        this.toggleLogDeleteAll();
+    }
+
     toggleLogDelete(){
         this.setState({
             logDeleteModal: !this.state.logDeleteModal,
+        })
+    }
+
+    toggleLogDeleteAll(){
+        this.setState({
+            logDeleteAllModal: !this.state.logDeleteAllModal,
         })
     }
 
@@ -112,10 +124,13 @@ export default class App extends React.Component {
     renderTextLine(arr){
         
         return (
-            <TouchableOpacity onPress={()=>this.openDeleteModal(arr.id)} key={arr.id}>
-                <Text>
+            <TouchableOpacity onPress={()=>this.openDeleteModal(arr.id)} key={arr.id}
+            style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text style={{fontSize: 17}}>
                     {arr.food} {arr.kcal}kcal
                 </Text>
+                <Image source={require('./images/x-icon_20x20.png')}
+                style={{width: 20, height: 20, marginLeft: 5}}/>
             </TouchableOpacity>
         );
     }
@@ -153,6 +168,12 @@ export default class App extends React.Component {
                             </Text>
                         </TouchableOpacity>
 
+                        <TouchableOpacity onPress={()=>this.openDeleteAllModal()}>
+                            <Text style={styles.doneText}>
+                                모두 삭제
+                            </Text>
+                        </TouchableOpacity>
+
                         <TouchableOpacity 
                         // onPress={()=>this.props.modalHandler()}
                         onPress={()=>this.props.modalHandler()}
@@ -174,12 +195,13 @@ export default class App extends React.Component {
 
                 {this.state.logDeleteModal ? <LogDelete
                     modalHandler={()=>this.toggleLogDelete()}
-                    // deleteTempItem={(k)=>this.deleteItem(k)}
                     num={this.state.delNum}
-                    tempKcalLog={this.state.tempKcalLog}
-                    // element={this.state.tempKcalLog[this.state.delNum]}
-                    />
-                    
+                    tempKcalLog={this.state.tempKcalLog}/>
+                    : <></>}
+
+                {this.state.logDeleteAllModal ? <LogDeleteAll
+                    modalHandler={()=>this.toggleLogDeleteAll()}
+                    tempKcalLog={this.state.tempKcalLog}/>
                     : <></>}
 
             </View>
@@ -225,7 +247,7 @@ const styles = StyleSheet.create({
         color: 'rgb(1,123,255)',
         fontSize: 15,
         margin: 10,
-        marginHorizontal: 20,
+        marginHorizontal: 15,
     },
 });
 

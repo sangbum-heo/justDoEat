@@ -10,9 +10,9 @@ export default class App extends React.Component {
             tempKcalLog: this.props.tempKcalLog,
         }
     }
-    logElementDelete(k){
+    deleteAll(){
         var temp = this.state.tempKcalLog;
-        temp.splice(k,1);
+        temp.splice(0);
         this.props.modalHandler();
 
     }
@@ -27,12 +27,11 @@ export default class App extends React.Component {
                         - 섭취 기록 삭제-
                     </Text>
                     <Text>
-                        {this.props.tempKcalLog[this.props.num].food} {this.props.tempKcalLog[this.props.num].kcal}kcal
-                        를 삭제하시겠습니까?
+                        모두 삭제하시겠습니까?
                     </Text>
                     
                     <View style={styles.selectTouchable}>
-                        <TouchableOpacity onPress={()=>this.logElementDelete(this.props.num)}>
+                        <TouchableOpacity onPress={()=>this.deleteAll()}>
                             <Text style={styles.doneText}>
                                 삭제
                             </Text>

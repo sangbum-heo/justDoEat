@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
 
     //top
     topview: {
-        flex: 2.52,
+        flex: 2.5,
         justifyContent: 'flex-end',
     },
     topTitle: {

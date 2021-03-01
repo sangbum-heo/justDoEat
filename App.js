@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, ImageBackground, ScrollView, Button, useState } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, ImageBackground, ScrollView, Button, useState, addons, TouchableOpacityBase } from 'react-native';
 import ProgressCircle from 'react-native-progress-circle';
 import KcalGoal from './KcalGoal';
 import QuickSet from './QuickButtonSetting';
@@ -13,13 +13,14 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: new Date(),
+      //date: new Date(),
       kcalGoal: 1500,
       kcalLog: [
         {food: '햇반',kcal: 300},
         {food: '김치찌개',kcal: 300},
         {food: '닭가슴살',kcal: 140}
       ],
+      kcalNow: 0,
       count:0,
       goalModal: false,
       quickSetModal: false,
@@ -37,11 +38,22 @@ export default class App extends React.Component {
     }
   };
 
-  test(){ // 이러면 삭제하고나서 가장 위에 있는 항목의 id를 다시 0으로 설정해야하는데 어떡하지..
-    const modi = this.state.kcalLog.filter(id => id.id !== 0);
-    this.setState({
-      kcalLog: modi,
-    })
+  kcalNowColor(){
+    if(this.state.kcalNow / this.state.kcalGoal >= 1){
+      return 'rgb(255,70,70)'
+    }
+    else if(this.state.kcalNow / this.state.kcalGoal >= 0.8){
+      return 'rgb(255,150,0)'
+    }
+    else if(this.state.kcalNow / this.state.kcalGoal >= 0.6){
+      return 'rgb(255,200,0)'
+    }
+    else if(this.state.kcalNow / this.state.kcalGoal >= 0.4){
+      return 'rgb(0,225,0)'
+    }
+    else if(this.state.kcalNow / this.state.kcalGoal >= 0){
+      return 'rgb(0,120,255)'
+    }
   }
   
   setLog(arr){ //LogUpdate에 props로 보낼 함수
@@ -63,7 +75,7 @@ export default class App extends React.Component {
   }
 
   todayPercentage(){
-    return Math.round(this.todayCalc() / this.state.kcalGoal * 100);
+    return Math.round(this.state.kcalNow / this.state.kcalGoal * 100);
   }
 
   todayScroll(){
@@ -75,11 +87,12 @@ export default class App extends React.Component {
   }
 
   todayCalc(){
-    let sum=0;
+    var sum=0;
     for(var i=0; i<this.state.kcalLog.length; i++){
       sum += this.state.kcalLog[i].kcal;
     }
-    return sum;
+    this.state.kcalNow = sum;  // state에 직접 값을 넣지 말랬는데..
+    // return sum;
   }
 
   middleThirdText(k){
@@ -165,10 +178,10 @@ export default class App extends React.Component {
   render(){
     return (
       <View style={styles.container}>
+        {this.todayCalc()}
         <ImageBackground
           style={{width: '100%', height: '100%'}}
           source={require('./images/background.png')}>
-
         <View style={styles.topView}>
           {/* <TouchableOpacity>
             <Image source={require('./images/menuIcon4.png')}/>
@@ -182,7 +195,14 @@ export default class App extends React.Component {
             <TouchableOpacity onPress={()=>this.toggleGoalModal()}>
             <View style={styles.middleFirst}>
               <Text style={styles.midddleFirstTextGoal}>MAX : {this.state.kcalGoal}kcal</Text>
-              <Text style={styles.midddleFirstTextEat}>Today : {this.todayCalc()}kcal</Text>
+              <Text style={{
+                alignSelf: 'center',
+                fontSize: 27,
+                fontWeight: 'bold',
+                color: this.kcalNowColor(),
+                textShadowColor:'#585858',
+                textShadowOffset:{width: 1.5, height: 1.5},
+                textShadowRadius: 1,}}>Today : {this.state.kcalNow}kcal</Text>
             </View>
             </TouchableOpacity>
             <View style={{marginRight:15}}>
@@ -191,7 +211,7 @@ export default class App extends React.Component {
               percent={this.todayPercentage()}
               radius={40}
               borderWidth={5}
-              color="#3399FF"
+              color= {this.kcalNowColor()}
               shadowColor="#999"
               bgColor="#fff"
               >
@@ -216,7 +236,7 @@ export default class App extends React.Component {
             onPress={()=>this.addLog(0)}
             onLongPress={()=>this.toggleQuickSetModal(0)}
             >
-              <Text style={styles.middleSecondText}>
+              <Text style={styles.middleThirdText}>
                 {this.middleThirdText(0)}
               </Text>
             </TouchableOpacity>
@@ -308,7 +328,7 @@ export default class App extends React.Component {
           setAppKcalLog={(arr)=>this.setLog(arr)}
           />
         : <></>}
-
+        
       </View>
     );
   }
@@ -337,12 +357,11 @@ const styles = StyleSheet.create({
   //middle
   middleView: {
     flex: 25,
-    
   },
 
   middleFirst: {
     height: 70,
-    width: 275,
+    width: 270,
     marginTop: 5,
     marginLeft: 15,
     borderColor: '#555',
@@ -363,22 +382,24 @@ const styles = StyleSheet.create({
   },
   midddleFirstTextGoal: {
     marginTop: 2,
-    marginRight: 8,
+    marginRight: 0,
     alignSelf: 'center',
     fontSize: 12,
     fontWeight: 'bold',
   },
   midddleFirstTextEat: {
-    alignSelf: 'center',
     
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: '#33AFFF',
+    // alignSelf: 'center',
     
+    // fontSize: 27,
+    // fontWeight: 'bold',
+    // color: 'rgb(255,60,60)',
+    // // 33afff
+    // // aabeff
 
-    textShadowColor:'#585858',
-    textShadowOffset:{width: 1, height: 1},
-    textShadowRadius: 1.5,
+    // textShadowColor:'#585858',
+    // textShadowOffset:{width: 1, height: 1},
+    // textShadowRadius: 1.5,
   },
 
   middleSecond: {
@@ -416,7 +437,7 @@ const styles = StyleSheet.create({
   },
   middleThirdBox: {
     width: 170,
-    height: 70,
+    height: 75,     //////////////////////////////// <- 이상함
     alignSelf: 'flex-end',
     borderRadius: 18,
     borderWidth: 1.5,
@@ -436,6 +457,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
     elevation: 7,
+  },
+  middleThirdText: {
+    fontSize: 18,
+    
   },
 
   //bottom
