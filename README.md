@@ -1,6 +1,6 @@
 # justDoEat
 just do eat (react-native)
-WOW good?!
+use expo-cli
 
 ----- pull -----
 git pull justDoEat master
