@@ -2,6 +2,10 @@
 just do eat (react-native)
 use expo-cli
 
+![diagram](https://user-images.githubusercontent.com/72535309/112653123-78061a00-8e91-11eb-84c2-2e2ef8050911.png)
+![gui](https://user-images.githubusercontent.com/72535309/112653133-789eb080-8e91-11eb-8a6c-c8ae56c59a2c.png)
+
+
 ----- pull -----
 git pull justDoEat master
 ----- push -----
